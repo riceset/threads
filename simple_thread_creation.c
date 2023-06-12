@@ -1,41 +1,47 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   concurrency.c                                      :+:      :+:    :+:   */
+/*   pthread.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tkomeno <tkomeno@student.42tokyo.jp>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/18 16:45:43 by tkomeno           #+#    #+#             */
-/*   Updated: 2023/04/18 17:10:18 by tkomeno          ###   ########.fr       */
+/*   Created: 2023/06/12 15:46:33 by tkomeno           #+#    #+#             */
+/*   Updated: 2023/06/12 15:53:05 by tkomeno          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <pthread.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <unistd.h>
 
-void *thread_func1(void *arg)
+typedef pthread_t thread;
+
+void *my_turn(void *arg)
 {
-	printf("From thread1!\n");
-	return (NULL);
+	while (true)
+	{
+		sleep(2);
+		printf("my turn!\n");
+	}
 }
 
-void *thread_func2(void *arg)
+void your_turn(void)
 {
-	printf("From thread2!\n");
-	return (NULL);
+	while (true)
+	{
+		sleep(2);
+		printf("your turn!\n");
+	}
 }
 
 int main(void)
 {
-	pthread_t thread1, thread2;
+	thread new_thread;
 
-	pthread_create(&thread1, NULL, thread_func1, NULL);
-	pthread_create(&thread2, NULL, thread_func2, NULL);
+	pthread_create(&new_thread, NULL, my_turn, NULL);
 
-	//waits for both threads to finish.
-	pthread_join(thread1, NULL);
-	pthread_join(thread2, NULL);
+	your_turn();
 
 	return (0);
 }
